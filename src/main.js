@@ -6,8 +6,11 @@ import router from './router'
 import firebase from 'firebase'
 import Vuex from 'vuex'
 import authStore from './store.js'
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
 
 Vue.use(Vuex)
+Vue.use(Vuetify)
 Vue.config.productionTip = false
 
 // Initialize Firebase

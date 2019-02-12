@@ -1,38 +1,24 @@
 <template>
-  <div id="app">
-    <sharedHeader/>
-    <main>
-      <img src="./assets/logo.png" alt="Vue.js PWA">
-      <router-view></router-view>
-    </main>
-  </div>
+  <v-layout>
+    <v-flex>
+      <homePage/>
+      <bottomHeader/>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
-import sharedHeader from './components/header'
+import bottomHeader from './components/header'
+import homePage from './components/home'
 export default {
   name: 'app',
   components: {
-    sharedHeader
+    bottomHeader,
+    homePage
   }
 }
 </script>
 
 <style>
-body {
-  margin: 0;
-}
-
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
-
-main {
-  text-align: center;
-  margin-top: 40px;
-}
 
 </style>
