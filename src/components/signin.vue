@@ -1,13 +1,30 @@
 <template>
-  <div class="signin">
-    <h2>Sign in</h2>
-    <input type="text" placeholder="Username" v-model="username">
-    <input type="password" placeholder="Password" v-model="password">
-    <button @click='signin'>Signin</button>
-    <p>You don't have an account? 
-      <router-link to="/signup">create account now!!</router-link>
-    </p>
-  </div>
+  <v-app>
+    <v-layout>
+      <v-flex xs8 offset-xs2 mt-5>
+        <v-card flat>
+          <form>
+            <v-text-field
+              v-model="username"
+              label="E-mail Address"
+              required
+            >
+            </v-text-field>
+            <v-text-field
+              v-model="password"
+              label="Password"
+              required
+            >
+            </v-text-field>
+          </form>
+          <button @click='signin'>Signin</button>
+          <p>You don't have an account? 
+            <router-link to="/signup">create account now!!</router-link>
+          </p>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-app>
 </template>
 
 <script>

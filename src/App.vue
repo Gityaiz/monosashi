@@ -1,7 +1,7 @@
 <template>
   <v-layout>
     <v-flex>
-      <homePage/>
+      <router-view/>
       <bottomHeader/>
     </v-flex>
   </v-layout>

@@ -9,29 +9,49 @@
       <v-btn
         color="teal"
         flat
-        value="Recent"
+        @click='routePage("home")'
       >
-        <span>Å</span>
+        <span>ホーム</span>
       </v-btn>
 
       <v-btn
         color="teal"
         flat
-        value="favorites"
+        @click='routePage("myQuestions")'
       >
-        <span>B</span>
+        <span>自分の質問</span>
       </v-btn>
 
       <v-btn
         color="teal"
         flat
-        value="nearby"
+        @click='routePage("mypage")'
       >
-        <span>C</span>
+        <span>マイページ</span>
       </v-btn>
     </v-bottom-nav>
   </v-card>
 </template>
+<script>
+export default {
+  data () {
+    return {
+      bottomNav: 'recent'
+    }
+  },
+  methods: {
+    routePage (_nextPage) {
+      console.log(_nextPage)
+      if (_nextPage === 'home') {
+        this.$router.push({path: '/'})
+      } else if (_nextPage === 'myQuestions') {
+      } else if (_nextPage === 'mypage') {
+        this.$router.push({path: '/signin'})
+      }
+    }
+  }
+}
+</script>
 <style scoped>
 #bottom-nav {
   position: fixed;

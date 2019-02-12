@@ -47,7 +47,6 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-  console.log('yobaretayo!!')
 })
 
 export default router
