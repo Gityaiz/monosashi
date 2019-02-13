@@ -1,9 +1,16 @@
 <template>
   <v-app>
     <v-layout>
-      <v-flex xs8 offset-xs2 mt-5>
+      <v-flex xs8 offset-xs2 mt-5 align-self-center>
         <v-card flat>
-          <form>
+          <v-tabs fixed-tabs>
+            <v-tab @click="changeTab('mail')">メール認証</v-tab>
+            <v-tab @click="changeTab('google')">google認証</v-tab>
+          </v-tabs>
+
+          <form
+            v-if="mailAuth"
+          >
             <v-text-field
               v-model="username"
               label="E-mail Address"
@@ -17,10 +24,16 @@
             >
             </v-text-field>
           </form>
-          <button @click='signin'>Signin</button>
-          <p>You don't have an account? 
-            <router-link to="/signup">create account now!!</router-link>
-          </p>
+          <v-btn
+            v-if="mailAuth"
+          >
+          Signin
+          </v-btn>
+          <p v-if="mailAuth">You don't have an account?</p>
+
+          <div v-if="googleAuth" id="googleAuthbtn">
+            <v-btn color="info" @click='signin()'>Googleアカウントでログイン</v-btn>
+          </div>
         </v-card>
       </v-flex>
     </v-layout>
@@ -33,7 +46,9 @@ export default {
   data () {
     return {
       username: '',
-      password: ''
+      password: '',
+      mailAuth: true,
+      googleAuth: false
     }
   },
   methods: {
@@ -45,6 +60,15 @@ export default {
           console.log(data)
         })
         .catch(error => alert(error.message))
+    },
+    changeTab (mode) {
+      this.mailAuth = false
+      this.googleAuth = false
+      if (mode === 'mail') {
+        this.mailAuth = true
+      } else if (mode === 'google') {
+        this.googleAuth = true
+      }
     }
   }
 }
@@ -77,5 +101,12 @@ a {
 input {
   margin: 10px 0;
   padding: 10px;
+}
+#googleAuthbtn {
+  height: 100px;
+  display: flex;
+  flex-direction: column; /* 子要素をflexboxにより縦方向に揃える */
+  justify-content: center; /* 子要素をflexboxにより中央に配置する */
+  align-items: center;  /* 子要素をflexboxにより中央に配置する */
 }
 </style>
