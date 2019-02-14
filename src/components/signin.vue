@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-layout>
-      <v-flex xs8 offset-xs2 mt-5 align-self-center>
+      <v-flex xs8 offset-xs2 align-self-center>
         <v-card flat>
           <v-tabs fixed-tabs>
             <v-tab @click="changeTab('mail')">メール認証</v-tab>
@@ -24,11 +24,15 @@
             >
             </v-text-field>
           </form>
-          <v-btn
-            v-if="mailAuth"
-          >
-          Signin
-          </v-btn>
+          <div id="mailAuthbtn">
+            <v-btn
+              v-if="mailAuth"
+              center
+            >
+            Signin
+            </v-btn>
+          </div>
+
           <p v-if="mailAuth">You don't have an account?</p>
 
           <div v-if="googleAuth" id="googleAuthbtn">
@@ -103,7 +107,13 @@ input {
   padding: 10px;
 }
 #googleAuthbtn {
-  height: 100px;
+  height: 200px;
+  display: flex;
+  flex-direction: column; /* 子要素をflexboxにより縦方向に揃える */
+  justify-content: center; /* 子要素をflexboxにより中央に配置する */
+  align-items: center;  /* 子要素をflexboxにより中央に配置する */
+}
+#mailAuthbtn {
   display: flex;
   flex-direction: column; /* 子要素をflexboxにより縦方向に揃える */
   justify-content: center; /* 子要素をflexboxにより中央に配置する */
