@@ -9,7 +9,7 @@
           </v-tabs>
 
           <form
-            v-if="mailAuth"
+            v-if="$isTextfield"
           >
             <v-text-field
               v-model="username"
@@ -28,15 +28,39 @@
             <v-btn
               v-if="mailAuth"
               center
+              @click="signinWithEmail()"
             >
-            Signin
+            ログイン
             </v-btn>
           </div>
 
-          <p v-if="mailAuth">You don't have an account?</p>
+          <div id="mailAuthbtn">
+            <v-btn
+              v-if="createAccount"
+              center
+              @click="signupWithEmail()"
+            >
+            アカウントを作成
+            </v-btn>
+          </div>
+
+          <p
+            v-if="mailAuth"
+            @click="changeTab('signup')"
+            id="Link"
+          >
+          アカウントを作成
+          </p>
+          <p
+            v-if="createAccount"
+            @click="changeTab('mail')"
+            id="Link"
+          >
+          ログインフォームに戻る
+          </p>
 
           <div v-if="googleAuth" id="googleAuthbtn">
-            <v-btn color="info" @click='signin()'>Googleアカウントでログイン</v-btn>
+            <v-btn color="info" @click='signinWithGoogle()'>Googleアカウントでログイン</v-btn>
           </div>
         </v-card>
       </v-flex>
@@ -52,26 +76,56 @@ export default {
       username: '',
       password: '',
       mailAuth: true,
-      googleAuth: false
+      googleAuth: false,
+      createAccount: false
+    }
+  },
+  computed: {
+    $isTextfield: function () {
+      return this.mailAuth || this.createAccount
     }
   },
   methods: {
-    signin () {
+    signinWithGoogle () {
+      if (this.username === '' || this.password === '') {
+        return
+      }
       const provider = new firebase.auth.GoogleAuthProvider()
       firebase.auth().signInWithPopup(provider)
         .then(data => {
-          alert('login success')
-          console.log(data)
+          this.username = ''
+          this.password = ''
         })
-        .catch(error => alert(error.message))
+        .catch(error => {
+          alert(error.message)
+        })
+    },
+    signupWithEmail () {
+      firebase.auth().createUserWithEmailAndPassword(this.username, this.password)
+        .then(data => {
+          console.log('success email login')
+        }).catch(function (error) {
+          console.log(error.code)
+        })
+    },
+    signinWithEmail () {
+      firebase.auth().signInWithEmailAndPassword(this.username, this.password)
+        .then(function (data) {
+          console.log('success email login')
+        }).catch(function (error) {
+          console.log(error.code)
+        })
     },
     changeTab (mode) {
       this.mailAuth = false
       this.googleAuth = false
+      this.createAccount = false
       if (mode === 'mail') {
         this.mailAuth = true
       } else if (mode === 'google') {
         this.googleAuth = true
+      } else if (mode === 'signup') {
+        this.createAccount = true
       }
     }
   }
@@ -118,5 +172,10 @@ input {
   flex-direction: column; /* 子要素をflexboxにより縦方向に揃える */
   justify-content: center; /* 子要素をflexboxにより中央に配置する */
   align-items: center;  /* 子要素をflexboxにより中央に配置する */
+}
+#Link {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>
