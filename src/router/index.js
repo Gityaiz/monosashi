@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import signin from '@/components/signin'
-import signup from '@/components/signup'
 import authstore from '../store.js'
 import home from '@/components/home'
+import mypage from '@/components/mypage'
 
 Vue.use(Router)
 
@@ -26,11 +26,11 @@ const router = new Router({
       }
     },
     {
-      path: '/signup',
-      name: 'signup',
-      component: signup,
+      path: '/mypage',
+      name: 'mypage',
+      component: mypage,
       meta: {
-        requiresAuth: false
+        requiresAuth: true
       }
     }
   ]
@@ -38,6 +38,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth) && !authstore.state.loggedIn) {
+    console.log('not logged in')
     next({
       path: '/signin', query: { redirect: to.fullPath }
     })

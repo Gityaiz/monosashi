@@ -41,12 +41,11 @@ export default {
   },
   methods: {
     routePage (_nextPage) {
-      console.log(_nextPage)
       if (_nextPage === 'home') {
         this.$router.push({path: '/'})
       } else if (_nextPage === 'myQuestions') {
       } else if (_nextPage === 'mypage') {
-        this.$router.push({path: '/signin'})
+        this.$router.push({path: '/mypage'})
       }
     }
   }

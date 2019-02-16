@@ -87,20 +87,21 @@ export default {
   },
   methods: {
     signinWithGoogle () {
-      if (this.username === '' || this.password === '') {
-        return
-      }
       const provider = new firebase.auth.GoogleAuthProvider()
       firebase.auth().signInWithPopup(provider)
         .then(data => {
-          this.username = ''
-          this.password = ''
+          this.$store.auth.dispatch('setLoggedIn')
+          this.$store.auth.dispatch('setUserID', data.user.email)
+          this.$router.push({path: '/'})
         })
         .catch(error => {
-          alert(error.message)
+          console.log(error)
         })
     },
     signupWithEmail () {
+      if (this.username === '' || this.password === '') {
+        return
+      }
       firebase.auth().createUserWithEmailAndPassword(this.username, this.password)
         .then(data => {
           console.log('success email login')
@@ -109,6 +110,9 @@ export default {
         })
     },
     signinWithEmail () {
+      if (this.username === '' || this.password === '') {
+        return
+      }
       firebase.auth().signInWithEmailAndPassword(this.username, this.password)
         .then(function (data) {
           console.log('success email login')
