@@ -1,7 +1,7 @@
 <template>
   <div
     id="e3"
-    style="width: 100%; margin: auto;"
+    style="margin: auto;"
     class="grey lighten-3"
   >
     <v-toolbar
@@ -30,6 +30,7 @@
                 counter="100"
                 label="タイトル"
                 v-model='question_title'
+                padding-right="10px"
               >
               </v-text-field>
 
@@ -48,7 +49,7 @@
         <v-layout row wrap>
           <v-flex xs12>
             <v-card
-              color="white"
+              color="blue-grey darken-2"
               class="black--text"
               v-for='(topic, index) in topics' :key="index"
             >
@@ -87,15 +88,19 @@ export default {
     this.database.collection('topics').get()
       .then((querySnapshot) => {
         this.topics = querySnapshot.docs
-        querySnapshot.forEach((doc) => {
-          console.log(doc.id, '=>', doc.data())
-        })
       })
   },
   methods: {
     submit_question () {
+      if (this.question_title === '' || this.question_body === '' || this.$store.auth.getters.isLoggedIn === false) {
+        return
+      }
+      this.database.collection('topics').add({
+        title: this.question_title,
+        body: this.question_body,
+        user: this.$store.auth.getters.fireid
+      })
       this.snackbar = true
-      console.log(this.question_title, this.question_body)
     }
   }
 }

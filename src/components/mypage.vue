@@ -23,7 +23,7 @@ export default {
       firebase.auth().signOut()
         .then(data => {
           this.$store.auth.dispatch('setLogOut')
-          this.$store.auth.dispatch('setUserID', '')
+          this.$store.auth.dispatch('setEmail', '')
           this.$router.push({path: '/signin'})
         })
     }

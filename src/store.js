@@ -5,13 +5,14 @@ import createPersistedState from 'vuex-persistedstate'
 Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
-    userid: {},
-    loggedIn: false
+    email: {},
+    loggedIn: false,
+    fireid: {}
   },
   // mutations: コンポーネントでいうmethod
   mutations: {
-    setUserID (state, value) {
-      state.userid = value
+    setEmail (state, value) {
+      state.email = value
     },
     setLoggedIn (state) {
       state.loggedIn = true
@@ -19,33 +20,44 @@ const store = new Vuex.Store({
     setLogOut (state) {
       state.loggedIn = false
       state.userid = ''
+    },
+    setFireID (state, value) {
+      state.fireid = value
     }
   },
   // getters: コンポーネントでいうcomputed
   getters: {
-    userid (state) {
-      return state.userid
+    email (state) {
+      return state.email
     },
     isLoggedIn (state) {
       return state.loggedIn
+    },
+    fireid (state) {
+      return state.fireid
     }
   },
   // mutationsで定義しているゲッタはここから呼ぶらしい
   actions: {
-    setUserID ({commit}, value) {
-      commit('setUserID', {value})
+    setEmail ({commit}, value) {
+      commit('setEmail', {value})
     },
     setLoggedIn ({commit}) {
       commit('setLoggedIn')
     },
     setLogOut ({commit}) {
       commit('setLogOut')
+    },
+    setFireID ({commit}, value) {
+      commit('setFireID', {value})
     }
   },
-  plugins: [createPersistedState({
-    key: 'scrappy',
-    paths: ['userid', 'loggedIn'],
-    storage: window.sessionStorage
-  })]
+  plugins: [
+    createPersistedState({
+      key: 'monosashi',
+      paths: ['email', 'loggedIn', 'fireid'],
+      storage: window.sessionStorage
+    })
+  ]
 })
 export default store

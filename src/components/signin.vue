@@ -91,7 +91,8 @@ export default {
       firebase.auth().signInWithPopup(provider)
         .then(data => {
           this.$store.auth.dispatch('setLoggedIn')
-          this.$store.auth.dispatch('setUserID', data.user.email)
+          this.$store.auth.dispatch('setEmail', data.user.email)
+          this.$store.auth.dispatch('setFireID', data.user.uid)
           this.$router.push({path: '/'})
         })
         .catch(error => {
