@@ -100,6 +100,8 @@ export default {
         body: this.question_body,
         user: this.$store.auth.getters.fireid
       })
+      this.question_body = ''
+      this.question_body = ''
       this.snackbar = true
     }
   }
