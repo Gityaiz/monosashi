@@ -1,6 +1,9 @@
 <template>
   <v-layout>
     <v-flex>
+      <v-snackbar v-model="snackbar" top>
+        {{ text }}
+      </v-snackbar>
       <router-view/>
       <bottomHeader/>
     </v-flex>
@@ -8,13 +11,17 @@
 </template>
 
 <script>
-import bottomHeader from './components/header'
-import homePage from './components/home'
+import bottomHeader from './components/bottomheader'
 export default {
   name: 'app',
   components: {
-    bottomHeader,
-    homePage
+    bottomHeader
+  },
+  data () {
+    return {
+      text: 'aa',
+      snackbar: false
+    }
   }
 }
 </script>

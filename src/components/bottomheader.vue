@@ -54,7 +54,10 @@ export default {
 <style scoped>
 #bottom-nav {
   width: 100%;
+  height: 5%;
   position: fixed;
   bottom: 0px;
+  padding-top: 0px;
+  margin-top: 0px;
 }
 </style>
