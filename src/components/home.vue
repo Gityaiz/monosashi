@@ -4,7 +4,7 @@
       fluid
       grid-list-lg
     >
-      <!-- <v-layout>
+      <v-layout>
         <v-flex xs12>
           <v-card
             color="white"
@@ -28,7 +28,7 @@
             質問を投稿する
           </v-btn>
         </v-flex>
-      </v-layout> -->
+      </v-layout>
 
       <v-layout row wrap>
         <v-flex xs12>
@@ -45,7 +45,13 @@
               <span>{{ topic.data().body }}</span>
             </v-card-text> -->
           </v-card>
-          <v-spacer></v-spacer>
+        </v-flex>
+        <!--投稿ボタンの配置-->
+        <!-- タイムラインの縦比を決めれば必然的にこのボタンの位置が決まる -->
+        <v-flex>
+          <v-btn fab large color="cyan" right bottom>
+            <v-icon dark>edit</v-icon>
+          </v-btn>
         </v-flex>
       </v-layout>
     </v-container>
@@ -88,11 +94,10 @@ export default {
 }
 </script>
 
-<style>
-.initial-box {
-    padding: 30px;
-    margin: 1px;
-    background: #f0f7ff;
-    border: dashed 2px #b9c5d4;/*点線*/
+<style scoped>
+.put-question {
+  position: fixed;
+  right: 0px;
+  bottom: 20px;
 }
 </style>
