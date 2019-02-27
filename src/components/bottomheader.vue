@@ -19,7 +19,7 @@
         flat
         @click='routePage("myQuestions")'
       >
-        <span>自分の質問</span>
+        <span>myQ</span>
       </v-btn>
 
       <v-btn
@@ -44,6 +44,7 @@ export default {
       if (_nextPage === 'home') {
         this.$router.push({path: '/'})
       } else if (_nextPage === 'myQuestions') {
+        this.$router.push({path: '/myQ'})
       } else if (_nextPage === 'mypage') {
         this.$router.push({path: '/mypage'})
       }

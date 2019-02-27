@@ -4,6 +4,7 @@ import signin from '@/components/signin'
 import authstore from '../store.js'
 import home from '@/components/home'
 import mypage from '@/components/mypage'
+import myQ from '@/components/myQ'
 
 Vue.use(Router)
 
@@ -29,6 +30,14 @@ const router = new Router({
       path: '/mypage',
       name: 'mypage',
       component: mypage,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/myQ',
+      name: 'myQ',
+      component: myQ,
       meta: {
         requiresAuth: true
       }

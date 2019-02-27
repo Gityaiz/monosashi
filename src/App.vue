@@ -2,7 +2,7 @@
   <v-layout>
     <v-flex>
       <v-snackbar v-model="snackbar" top>
-        {{ text }}
+        {{ this.snackbarMessage }}
       </v-snackbar>
       <router-view/>
       <bottomHeader/>
@@ -19,7 +19,7 @@ export default {
   },
   data () {
     return {
-      text: 'aa',
+      snackbarMessage: '',
       snackbar: false
     }
   }
