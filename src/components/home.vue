@@ -1,8 +1,7 @@
 <template>
   <v-card>
     <v-container
-      fluid
-      grid-list-lg
+      align-center
     >
       <v-layout row wrap>
         <v-flex xs12>

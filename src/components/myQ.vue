@@ -25,6 +25,19 @@
     </v-dialog>
     <v-card>
       <v-flex>
+        <v-data-table
+          :headers="this.headers"
+          :items="this.myquestions"
+          class="elevation-1"
+        >
+          <template slot="items" slot-scope="props">
+            <td>{{ props.item.title }}</td>
+            <td class="text-xs-right">{{ props.item.body }}</td>
+          </template>
+        </v-data-table>
+        <!-- <div class= "text-xs-center pt-2">
+          <v-pagination v-model="pagination.page" : length="pages"></v-pagination>
+        </div> -->
         <v-btn fab large color="cyan" right fixed @click="dialog=true">
           <v-icon dark>edit</v-icon>
         </v-btn>
@@ -41,11 +54,36 @@ export default {
       dialog: false,
       question_title: '',
       question_body: '',
-      text: '投稿しました'
+      text: '投稿しました',
+      timestamp: '',
+      myquestions: [],
+      pagination: {},
+      headers: [
+        {
+          text: 'myquestions',
+          align: 'left',
+          sortable: false,
+          value: name
+        },
+        {text: 'title', value: 'title'},
+        {text: 'field', value: 'field'}
+      ]
     }
   },
+  // computed () {
+  //   if (this.pagination.rowsPerPage == null ||
+  //         this.pagination.totalItems == null
+  //       ) return 0
+
+  //       return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
+  // },
   created () {
     this.database = firebase.firestore()
+    this.database.collection('topics').where('author', '==', this.$store.auth.getters.fireid)
+      .get()
+      .then((querySnapshot) => {
+        this.myquestions = querySnapshot.docs.map(elem => elem.data())
+      })
   },
   methods: {
     submit_question () {
@@ -55,7 +93,8 @@ export default {
       this.database.collection('topics').add({
         title: this.question_title,
         body: this.question_body,
-        user: this.$store.auth.getters.fireid
+        author: this.$store.auth.getters.fireid,
+        created: firebase.firestore.FieldValue.serverTimestamp()
       })
       this.question_title = ''
       this.question_body = ''
