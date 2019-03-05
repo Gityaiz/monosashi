@@ -1,23 +1,19 @@
 <template>
   <v-card>
-    <v-container
-      align-center
-    >
-      <v-layout row wrap>
-        <v-flex xs12>
-          <v-card
-            class="black--text"
-            v-for='(topic, index) in topics' :key="index"
-          >
-            <v-card-title primary-title>
-              <div>
-                <span>{{ topic.data().title }}</span>
-              </div>
-            </v-card-title>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-container>
+    <v-flex>
+      <v-data-table
+        :headers="this.headers"
+        :items="this.topics"
+        class="elevation-1"
+      >
+        <template slot="items" slot-scope="props">
+          <td>{{ props.item.title }}</td>
+          <td>{{ props.item.body }}</td>
+          <td>{{ props.item.urayama }}</td>
+          <td>{{ props.item.kawaiso }}</td>
+        </template>
+      </v-data-table>
+    </v-flex>
   </v-card>
 </template>
 
@@ -27,14 +23,33 @@ export default {
   data () {
     return {
       database: [],
-      topics: []
+      topics: [],
+      headers: [
+        {
+          text: 'タイトル',
+          value: 'title',
+          sortable: false
+        },
+        {
+          text: '内容',
+          value: 'body'
+        },
+        {
+          text: 'better',
+          value: 'urayama'
+        },
+        {
+          text: 'worse',
+          value: 'kawaiso'
+        }
+      ]
     }
   },
   created () {
     this.database = firebase.firestore()
     this.database.collection('topics').get()
       .then((querySnapshot) => {
-        this.topics = querySnapshot.docs
+        this.topics = querySnapshot.docs.map(elem => elem.data())
       })
   },
   methods: {

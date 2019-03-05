@@ -48,8 +48,8 @@
           <template slot="items" slot-scope="props">
             <td>{{ props.item.title }}</td>
             <td>{{ props.item.body }}</td>
-            <td>{{ props.item.kawaiso }}</td>
             <td>{{ props.item.urayama }}</td>
+            <td>{{ props.item.kawaiso }}</td>
             <v-btn flat icon color="indigo" @click='confirm_dialog=true;delete_temp=props.item'>×</v-btn>
 
           </template>
@@ -83,23 +83,25 @@ export default {
       pagination: {},
       headers: [
         {
-          text: 'myquestions',
-          align: 'right',
+          text: 'タイトル',
           sortable: false,
-          value: name
+          value: 'title'
         },
-        {text: 'title', value: 'タイトル'},
-        {text: 'field', value: '本文'}
+        {
+          text: '内容',
+          value: 'body'
+        },
+        {
+          text: 'うらやましい',
+          value: 'urayama'
+        },
+        {
+          text: 'かわいそう',
+          value: 'kawaiso'
+        }
       ]
     }
   },
-  // computed () {
-  //   if (this.pagination.rowsPerPage == null ||
-  //         this.pagination.totalItems == null
-  //       ) return 0
-
-  //       return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
-  // },
   created () {
     this.database = firebase.firestore()
     this.database.collection('topics').where('author', '==', this.$store.auth.getters.fireid)
@@ -129,11 +131,13 @@ export default {
       })
       if (documentid != null) {
         // ここでリロードせずに配列に追加したい
-        // this.myquestions.splice(this.myquestions.length - 1, 0, {})
-        // this.myquestions[this.myquestions.length].title = this.question.title
-        // this.myquestions[this.myquestions.length].body = this.question.body
-        // this.myquestions[this.myquestions.length].timestamp = this.question.timestamp
-        // this.myquestions[this.myquestions.length].id = documentid
+        // console.log('>>', this.myquestions)
+        this.myquestions.push({'urayama': 0, 'kawaiso': 0})
+        // console.log('>>', this.myquestions[this.myquestions.length] - 1)
+        this.myquestions[this.myquestions.length - 1].title = this.question.title
+        this.myquestions[this.myquestions.length - 1].body = this.question.body
+        this.myquestions[this.myquestions.length - 1].timestamp = this.question.timestamp
+        this.myquestions[this.myquestions.length - 1].id = documentid
         this.question.title = ''
         this.question.body = ''
         this.$parent.snackbarMessage = '投稿しました'
