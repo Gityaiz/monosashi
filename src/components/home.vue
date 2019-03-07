@@ -1,20 +1,23 @@
 <template>
-  <v-card>
-    <v-flex>
-      <v-data-table
-        :headers="this.headers"
-        :items="this.topics"
-        class="elevation-1"
-      >
-        <template slot="items" slot-scope="props">
-          <td>{{ props.item.title }}</td>
-          <td>{{ props.item.body }}</td>
-          <td>{{ props.item.urayama }}</td>
-          <td>{{ props.item.kawaiso }}</td>
-        </template>
-      </v-data-table>
-    </v-flex>
-  </v-card>
+  <v-container>
+    <v-layout>
+      <v-flex>
+        <v-card>
+          <v-data-table
+            :headers="this.headers"
+            :items="this.topics"
+            class="elevation-1"
+          >
+            <template slot="items" slot-scope="props">
+              <td>{{ props.item.title }}</td>
+              <td>{{ props.item.urayama }}</td>
+              <td>{{ props.item.kawaiso }}</td>
+            </template>
+          </v-data-table>
+        </v-card>
+      </v-flex>
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -28,18 +31,15 @@ export default {
         {
           text: 'タイトル',
           value: 'title',
+          align: 'left',
           sortable: false
         },
         {
-          text: '内容',
-          value: 'body'
-        },
-        {
-          text: 'better',
+          text: 'good!',
           value: 'urayama'
         },
         {
-          text: 'worse',
+          text: 'bad!',
           value: 'kawaiso'
         }
       ]

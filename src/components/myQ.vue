@@ -39,28 +39,35 @@
       </v-btn>
     </v-dialog>
     <v-card>
-      <v-flex>
-        <v-data-table
-          :headers="this.headers"
-          :items="this.myquestions"
-          class="elevation-1"
-        >
-          <template slot="items" slot-scope="props">
-            <td>{{ props.item.title }}</td>
-            <td>{{ props.item.body }}</td>
-            <td>{{ props.item.urayama }}</td>
-            <td>{{ props.item.kawaiso }}</td>
-            <v-btn flat icon color="indigo" @click='confirm_dialog=true;delete_temp=props.item'>×</v-btn>
-
-          </template>
-        </v-data-table>
-        <!-- <div class= "text-xs-center pt-2">
-          <v-pagination v-model="pagination.page" : length="pages"></v-pagination>
-        </div> -->
-        <v-btn fab large color="cyan" right fixed @click="dialog=true">
-          <v-icon dark>edit</v-icon>
-        </v-btn>
-      </v-flex>
+      <v-container>
+        <v-layout>
+          <v-flex>
+            <v-data-table
+              :headers="this.headers"
+              :items="this.myquestions"
+              class="elevation-1"
+            >
+              <template slot="items" slot-scope="props">
+                <td>{{ props.item.title }}</td>
+                <td>{{ props.item.urayama }}</td>
+                <td>{{ props.item.kawaiso }}</td>
+                <td>
+                  <v-icon
+                    small
+                    class='mr-2'
+                    @click='confirm_dialog=true;delete_temp=props.item'
+                  >
+                    delete
+                  </v-icon>
+                </td>
+              </template>
+            </v-data-table>
+          </v-flex>
+        </v-layout>
+      </v-container>
+      <v-btn fab large color="cyan" right fixed @click="dialog=true">
+        <v-icon dark>edit</v-icon>
+      </v-btn>
     </v-card>
   </div>
 </template>
@@ -78,31 +85,39 @@ export default {
         body: '',
         timestamp: ''
       },
+      loading: 'false',
       text: '投稿しました',
       myquestions: [],
-      pagination: {},
       headers: [
         {
           text: 'タイトル',
+          value: 'title',
+          align: 'left',
           sortable: false,
-          value: 'title'
+          width: '10%'
         },
         {
-          text: '内容',
-          value: 'body'
-        },
-        {
-          text: 'うらやましい',
+          text: 'good!',
           value: 'urayama'
         },
         {
-          text: 'かわいそう',
+          text: 'bad!',
           value: 'kawaiso'
         }
       ]
     }
   },
+  computed: {
+    pages () {
+      if (this.pagination.rowsPerPage == null || this.pagination.totalItems == null) {
+        console.log('hello')
+        return 0
+      }
+      return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
+    }
+  },
   created () {
+    this.loading = 'true'
     this.database = firebase.firestore()
     this.database.collection('topics').where('author', '==', this.$store.auth.getters.fireid)
       .get()
@@ -112,6 +127,7 @@ export default {
           this.myquestions[i].id = querySnapshot.docs[i].id
         }
       })
+    this.loading = 'false'
   },
   methods: {
     submit_question () {
@@ -131,9 +147,7 @@ export default {
       })
       if (documentid != null) {
         // ここでリロードせずに配列に追加したい
-        // console.log('>>', this.myquestions)
         this.myquestions.push({'urayama': 0, 'kawaiso': 0})
-        // console.log('>>', this.myquestions[this.myquestions.length] - 1)
         this.myquestions[this.myquestions.length - 1].title = this.question.title
         this.myquestions[this.myquestions.length - 1].body = this.question.body
         this.myquestions[this.myquestions.length - 1].timestamp = this.question.timestamp
