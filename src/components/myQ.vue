@@ -94,15 +94,21 @@ export default {
           value: 'title',
           align: 'left',
           sortable: false,
-          width: '10%'
+          width: '60%'
         },
         {
           text: 'good!',
-          value: 'urayama'
+          value: 'urayama',
+          width: '20%'
         },
         {
           text: 'bad!',
-          value: 'kawaiso'
+          value: 'kawaiso',
+          width: '20%'
+        },
+        {
+          text: 'delete',
+          width: '5%'
         }
       ]
     }
@@ -110,7 +116,6 @@ export default {
   computed: {
     pages () {
       if (this.pagination.rowsPerPage == null || this.pagination.totalItems == null) {
-        console.log('hello')
         return 0
       }
       return Math.ceil(this.pagination.totalItems / this.pagination.rowsPerPage)
