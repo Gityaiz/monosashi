@@ -125,6 +125,7 @@ export default {
     this.loading = 'true'
     this.database = firebase.firestore()
     this.database.collection('topics').where('author', '==', this.$store.auth.getters.fireid)
+      .orderBy('created', 'desc')
       .get()
       .then((querySnapshot) => {
         this.myquestions = querySnapshot.docs.map(elem => elem.data())
@@ -152,11 +153,11 @@ export default {
       })
       if (documentid != null) {
         // ここでリロードせずに配列に追加したい
-        this.myquestions.push({'urayama': 0, 'kawaiso': 0})
-        this.myquestions[this.myquestions.length - 1].title = this.question.title
-        this.myquestions[this.myquestions.length - 1].body = this.question.body
-        this.myquestions[this.myquestions.length - 1].timestamp = this.question.timestamp
-        this.myquestions[this.myquestions.length - 1].id = documentid
+        this.myquestions.unshift({'urayama': 0, 'kawaiso': 0})
+        this.myquestions[0].title = this.question.title
+        this.myquestions[0].body = this.question.body
+        this.myquestions[0].timestamp = this.question.timestamp
+        this.myquestions[0].id = documentid
         this.question.title = ''
         this.question.body = ''
         this.$parent.snackbarMessage = '投稿しました'

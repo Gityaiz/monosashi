@@ -47,7 +47,7 @@ export default {
   },
   created () {
     this.database = firebase.firestore()
-    this.database.collection('topics').get()
+    this.database.collection('topics').orderBy('created', 'desc').get()
       .then((querySnapshot) => {
         this.topics = querySnapshot.docs.map(elem => elem.data())
       })
