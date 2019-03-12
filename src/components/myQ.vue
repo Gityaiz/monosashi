@@ -43,23 +43,46 @@
         <v-layout>
           <v-flex>
             <v-data-table
+              v-model="selected"
               :headers="this.headers"
               :items="this.myquestions"
               class="elevation-1"
+              select-all
+              :pagination.sync="pagination"
             >
+            <template v-slot:headers="props">
+              <tr>
+                <th>
+                  <v-checkbox
+                    :input-value="props.all"
+                    :indeterminate="props.indeterminate"
+                    primary
+                    hide-details
+                    @click.stop="toggleAll"
+                  ></v-checkbox>
+                </th>
+                <th
+                  v-for="header in props.headers"
+                  :key="header.text"
+                  :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
+                  @click="changeSort(header.value)"
+                >
+                  <v-icon small>arrow_upward</v-icon>
+                  {{ header.text }}
+                </th>
+              </tr>
+            </template>
               <template slot="items" slot-scope="props">
-                <td>{{ props.item.title }}</td>
-                <td>{{ props.item.urayama }}</td>
-                <td>{{ props.item.kawaiso }}</td>
                 <td>
-                  <v-icon
-                    small
-                    class='mr-2'
-                    @click='confirm_dialog=true;delete_temp=props.item'
-                  >
-                    delete
-                  </v-icon>
+                  <v-checkbox
+                    :input-value="props.selected"
+                    primary
+                    hide-details
+                  ></v-checkbox>
                 </td>
+                <td>{{ props.item.title }}</td>
+                <td>{{ props.item.good }}</td>
+                <td>{{ props.item.bad }}</td>
               </template>
             </v-data-table>
           </v-flex>
@@ -85,30 +108,29 @@ export default {
         body: '',
         timestamp: ''
       },
+      pagination: {
+      },
       loading: 'false',
       text: '投稿しました',
       myquestions: [],
+      selected: [],
       headers: [
         {
           text: 'タイトル',
           value: 'title',
           align: 'left',
           sortable: false,
-          width: '60%'
+          width: '50%'
         },
         {
-          text: 'good!',
-          value: 'urayama',
+          text: 'good',
+          value: 'good',
           width: '20%'
         },
         {
-          text: 'bad!',
-          value: 'kawaiso',
+          text: 'bad',
+          value: 'bad',
           width: '20%'
-        },
-        {
-          text: 'delete',
-          width: '5%'
         }
       ]
     }
@@ -136,6 +158,18 @@ export default {
     this.loading = 'false'
   },
   methods: {
+    toggleAll () {
+      if (this.selected.length) this.selected = []
+      else this.selected = this.desserts.slice()
+    },
+    changeSort (column) {
+      if (this.pagination.sortBy === column) {
+        this.pagination.descending = !this.pagination.descending
+      } else {
+        this.pagination.sortBy = column
+        this.pagination.descending = false
+      }
+    },
     submit_question () {
       if (this.question.title === '' || this.question.body === '' || this.$store.auth.getters.isLoggedIn === false) {
         return
@@ -146,14 +180,14 @@ export default {
         body: this.question.body,
         author: this.$store.auth.getters.fireid,
         created: firebase.firestore.FieldValue.serverTimestamp(),
-        urayama: 0,
-        kawaiso: 0
+        good: 0,
+        bad: 0
       }).then(function (docRef) {
         documentid = docRef.id
       })
       if (documentid != null) {
         // ここでリロードせずに配列に追加したい
-        this.myquestions.unshift({'urayama': 0, 'kawaiso': 0})
+        this.myquestions.unshift({'good': 0, 'bad': 0})
         this.myquestions[0].title = this.question.title
         this.myquestions[0].body = this.question.body
         this.myquestions[0].timestamp = this.question.timestamp
