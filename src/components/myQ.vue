@@ -42,6 +42,12 @@
       <v-container>
         <v-layout>
           <v-flex>
+            <v-card>
+              <v-btn color="blue">Success</v-btn>
+              <v-btn color="pink accent-3" @click='delete_question(selected)'>delete</v-btn>
+              <v-btn color="warning">Warning</v-btn>
+              <v-btn color="info">Info</v-btn>
+            </v-card>
             <v-data-table
               v-model="selected"
               :headers="this.headers"
@@ -199,19 +205,22 @@ export default {
       }
     },
     delete_question (question) {
-      this.database = firebase.firestore()
-      this.database.collection('topics').doc(question.id).delete()
-        .then(function () {
-          console.log('delete question')
-          console.log('deleted question', '=>', question)
-        })
-      // 本来ここは成功したときのみ行うべきなので直前のカッコ内で行うべき。カッコ内でメンバ変数に参照する方法を確認する
-      for (var i = 0; i < this.myquestions.length; i++) {
-        if (question.id === this.myquestions[i].id) {
-          this.myquestions.splice(i, 1)
-        }
+      console.log(question)
+      console.log(question.length)
+      for (var i = 0; i < question.length; i++) {
+        console.log(question.id)
       }
-      console.log('myquestions', '=>', this.myquestions)
+      // this.database = firebase.firestore()
+      // this.database.collection('topics').doc(question.id).delete()
+      //   .then(function () {
+      //   })
+      // // 本来ここは成功したときのみ行うべきなので直前のカッコ内で行うべき。カッコ内でメンバ変数に参照する方法を確認する
+      // for (var i = 0; i < this.myquestions.length; i++) {
+      //   if (question.id === this.myquestions[i].id) {
+      //     this.myquestions.splice(i, 1)
+      //   }
+      // }
+      // console.log('myquestions', '=>', this.myquestions)
     }
   }
 }
