@@ -31,10 +31,10 @@
         <p>この操作は元に戻すことはできません。</p>
         <p>本当に削除してもよろしいですか？</p>
       </v-card>
-      <v-btn block @click='delete_question(delete_temp);confirm_dialog=false'>
+      <v-btn block @click='delete_question();confirm_dialog=false'>
         はい
       </v-btn>
-      <v-btn block @click='delete_question(delete_temp);confirm_dialog=false'>
+      <v-btn block @click='delete_question();confirm_dialog=false'>
         いいえ
       </v-btn>
     </v-dialog>
@@ -44,9 +44,7 @@
           <v-flex>
             <v-card>
               <v-btn color="blue">Success</v-btn>
-              <v-btn color="pink accent-3" @click='delete_question(selected)'>delete</v-btn>
-              <v-btn color="warning">Warning</v-btn>
-              <v-btn color="info">Info</v-btn>
+              <v-btn color="pink accent-3" @click='delete_question()'>delete</v-btn>
             </v-card>
             <v-data-table
               v-model="selected"
@@ -84,6 +82,7 @@
                     :input-value="props.selected"
                     primary
                     hide-details
+                    @change="toggleOne(props.item.id)"
                   ></v-checkbox>
                 </td>
                 <td>{{ props.item.title }}</td>
@@ -114,6 +113,7 @@ export default {
         body: '',
         timestamp: ''
       },
+      checked: [],
       pagination: {
       },
       loading: 'false',
@@ -150,7 +150,6 @@ export default {
     }
   },
   created () {
-    this.loading = 'true'
     this.database = firebase.firestore()
     this.database.collection('topics').where('author', '==', this.$store.auth.getters.fireid)
       .orderBy('created', 'desc')
@@ -161,12 +160,32 @@ export default {
           this.myquestions[i].id = querySnapshot.docs[i].id
         }
       })
-    this.loading = 'false'
   },
   methods: {
     toggleAll () {
-      if (this.selected.length) this.selected = []
-      else this.selected = this.myquestions.slice()
+      if (this.selected.length) {
+        this.selected = []
+      } else {
+        this.myquestions.forEach((item, index) => {
+          this.selected.push(item.id)
+        })
+      }
+    },
+    toggleOne (target) {
+      // NULLだったら新規追加
+      if (!this.checked) {
+        this.checked.unshift(target)
+        return
+      }
+      // 指定済み配列からidを削除
+      for (var i = 0; i < this.checked.length; i++) {
+        if (this.checked[i] === target) {
+          this.checked.splice(i, 1)
+          return
+        }
+      }
+      // 指定済み配列に追加
+      this.checked.unshift(target)
     },
     changeSort (column) {
       if (this.pagination.sortBy === column) {
@@ -204,23 +223,20 @@ export default {
         this.$parent.snackbar = true
       }
     },
-    delete_question (question) {
-      console.log(question)
-      console.log(question.length)
-      for (var i = 0; i < question.length; i++) {
-        console.log(question.id)
+    delete_question () {
+      console.log(this.checked)
+      this.database = firebase.firestore()
+      for (var i = 0; i < this.checked.length; i++) {
+        this.database.collection('topics').doc(this.checked[i]).delete()
+          .then(function () {
+          })
+        // 本来ここは成功したときのみ行うべきなので直前のカッコ内で行うべき。カッコ内でメンバ変数に参照する方法を確認する
+        for (var j = 0; j < this.myquestions.length; j++) {
+          if (this.checked[i] === this.myquestions[j].id) {
+            this.myquestions.splice(j, 1)
+          }
+        }
       }
-      // this.database = firebase.firestore()
-      // this.database.collection('topics').doc(question.id).delete()
-      //   .then(function () {
-      //   })
-      // // 本来ここは成功したときのみ行うべきなので直前のカッコ内で行うべき。カッコ内でメンバ変数に参照する方法を確認する
-      // for (var i = 0; i < this.myquestions.length; i++) {
-      //   if (question.id === this.myquestions[i].id) {
-      //     this.myquestions.splice(i, 1)
-      //   }
-      // }
-      // console.log('myquestions', '=>', this.myquestions)
     }
   }
 }
