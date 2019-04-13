@@ -4,6 +4,7 @@
       <v-snackbar v-model="snackbar" top>
         {{ this.snackbarMessage }}
       </v-snackbar>
+      <topHeader/>
       <router-view/>
       <bottomHeader/>
     </v-flex>
@@ -11,11 +12,13 @@
 </template>
 
 <script>
+import topHeader from './components/topheader'
 import bottomHeader from './components/bottomheader'
 export default {
   name: 'app',
   components: {
-    bottomHeader
+    bottomHeader,
+    topHeader
   },
   data () {
     return {

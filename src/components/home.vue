@@ -1,23 +1,34 @@
 <template>
-  <v-container>
-    <v-layout>
-      <v-flex>
-        <v-card>
-          <v-data-table
-            :headers="this.headers"
-            :items="this.topics"
-            class="elevation-1"
-          >
-            <template slot="items" slot-scope="props">
-              <td>{{ props.item.title }}</td>
-              <td>{{ props.item.urayama }}</td>
-              <td>{{ props.item.kawaiso }}</td>
-            </template>
-          </v-data-table>
-        </v-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
+  <div>
+    <v-card>
+      <v-container>
+        <v-layout>
+          <v-flex>
+            <v-data-table
+              :headers="this.headers"
+              :items="this.topics"
+              :expand="expand"
+              class="elevation-1"
+              item-key="title"
+            >
+              <template v-slot:items="props">
+                <tr @click="props.expanded = !props.expanded">
+                  <td>{{ props.item.title }}</td>
+                  <td>{{ props.item.good }}</td>
+                  <td>{{ props.item.bad }}</td>
+                </tr>
+              </template>
+              <template v-slot:expand="props">
+                <v-card flat>
+                  <v-card-text>Peek-a-boo!</v-card-text>
+                </v-card>
+              </template>
+            </v-data-table>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-card>
+  </div>
 </template>
 
 <script>
@@ -25,6 +36,7 @@ import firebase from '../firebase'
 export default {
   data () {
     return {
+      expand: false,
       database: [],
       topics: [],
       headers: [
@@ -36,11 +48,11 @@ export default {
         },
         {
           text: 'good!',
-          value: 'urayama'
+          value: 'good'
         },
         {
           text: 'bad!',
-          value: 'kawaiso'
+          value: 'bad'
         }
       ]
     }

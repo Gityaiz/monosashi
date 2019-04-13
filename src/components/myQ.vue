@@ -43,7 +43,6 @@
         <v-layout>
           <v-flex>
             <v-card>
-              <v-btn color="blue">Success</v-btn>
               <v-btn color="pink accent-3" @click='delete_question()'>delete</v-btn>
             </v-card>
             <v-data-table
@@ -52,42 +51,50 @@
               :items="this.myquestions"
               class="elevation-1"
               select-all
+              :expand="expand"
               :pagination.sync="pagination"
             >
-            <template v-slot:headers="props">
-              <tr>
-                <th>
-                  <v-checkbox
-                    :input-value="props.all"
-                    :indeterminate="props.indeterminate"
-                    primary
-                    hide-details
-                    @click.stop="toggleAll"
-                  ></v-checkbox>
-                </th>
-                <th
-                  v-for="header in props.headers"
-                  :key="header.text"
-                  :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
-                  @click="changeSort(header.value)"
-                >
-                  <v-icon small>arrow_upward</v-icon>
-                  {{ header.text }}
-                </th>
-              </tr>
-            </template>
-              <template slot="items" slot-scope="props">
-                <td>
-                  <v-checkbox
-                    :input-value="props.selected"
-                    primary
-                    hide-details
-                    @change="toggleOne(props.item.id)"
-                  ></v-checkbox>
-                </td>
-                <td>{{ props.item.title }}</td>
-                <td>{{ props.item.good }}</td>
-                <td>{{ props.item.bad }}</td>
+              <!-- <template v-slot:headers="props">
+                <tr>
+                  <th>
+                    <v-checkbox
+                      :input-value="props.all"
+                      :indeterminate="props.indeterminate"
+                      primary
+                      hide-details
+                      @click.stop="toggleAll"
+                    ></v-checkbox>
+                  </th>
+                  <th
+                    v-for="header in props.headers"
+                    :key="header.text"
+                    :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
+                    @click="changeSort(header.value)"
+                  >
+                    <v-icon small>arrow_upward</v-icon>
+                    {{ header.text }}
+                  </th>
+                </tr>
+              </template> -->
+              <template v-slot:items="props">
+                <tr @click="props.expanded = !props.expanded">
+                  <td>
+                    <v-checkbox
+                      :input-value="props.selected"
+                      primary
+                      hide-details
+                      @change="toggleOne(props.item.id)"
+                    ></v-checkbox>
+                  </td>
+                  <td>{{ props.item.title }}</td>
+                  <td>{{ props.item.good }}</td>
+                  <td>{{ props.item.bad }}</td>
+                </tr>
+              </template>
+              <template v-slot:expand="props">
+                <v-card flat>
+                  <v-card-text>Peek-a-boo!</v-card-text>
+                </v-card>
               </template>
             </v-data-table>
           </v-flex>
@@ -105,6 +112,7 @@ import firebase from '../firebase'
 export default {
   data () {
     return {
+      expand: false,
       dialog: false,
       confirm_dialog: false,
       delete_tempid: '',
@@ -126,7 +134,7 @@ export default {
           value: 'title',
           align: 'left',
           sortable: false,
-          width: '50%'
+          width: '60%'
         },
         {
           text: 'good',
